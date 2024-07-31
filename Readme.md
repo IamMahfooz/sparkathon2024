@@ -42,7 +42,13 @@ The Dynamic Invoice System aims to revolutionize supply chain management by leve
 
 ```plaintext
 ├── src
-│   ├── backend            # Backend code for the system
+│   ├── backend         # Backend code for the system
+|          |-- getProductsDetails()
+|          |-- updateProductDetails()
+|          |-- getProductStatus()
+|          |-- assingNextDestination()
 │   ├── frontend           # Frontend code for the system
+|          |-- Delivery Agent (/getProuctDetails() endpoint)
+|          |-- Warehouse Manager (/updateProductDetails() endpoints => rest part is done by walmart existing package allotment tool)
 └── README.md              # Project overview
 
