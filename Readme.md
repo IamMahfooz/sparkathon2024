@@ -70,6 +70,7 @@ npm install && npm run dev
 **Backend** :
 Install mongoDB and Go from the official sources to get started , then follow the give process.
 ```
+In the backend folder run the following commands
 sudo service mongod start && go run main.go
 ```
 
