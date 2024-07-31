@@ -1,4 +1,6 @@
-# Dynamic Invoice System Using QR Codes for Supply Chain Management
+**Dynamic Invoice System Using QR Codes for Supply Chain Management**  
+Effeciently manage returns and reassign packages with ease
+![image](https://github.com/user-attachments/assets/7af57dec-5cd6-4b18-a57e-c0773ea2909e)
 
 ## Overview
 
