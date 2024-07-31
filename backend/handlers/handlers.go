@@ -42,6 +42,8 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateProductDetails(w http.ResponseWriter, r *http.Request) {
+    // check for product status
+    // checkPructStatus(w,r)
     var product models.Product
     err := json.NewDecoder(r.Body).Decode(&product)
     if err != nil {
@@ -66,6 +68,19 @@ func UpdateProductDetails(w http.ResponseWriter, r *http.Request) {
     }
 
     json.NewEncoder(w).Encode(map[string]string{"message": "Product updated successfully"})
+}
+func checkProductStatus(w http.ResponseWriter, r *http.Request) {
+    // utilise the already implemented order tracking system of walmart
+    // if product status is in no current order category ==> ship to nearest warehouse
+    // else call assignNextDestination(w,r)
+}
+func assingNextDestination(w http.ResponseWriter,r * http.Request){
+    // utilise existing order tracking system to assing new destination
+    // ||--- if a same order place => if (distance of (new order - seller location) > distance of (new order - current location)){
+    //                                                ship directly to new location
+    //                                                }else{ ship to nearest warehouse }
+    //
+    // ||--- if not => return to nearest warehouse
 }
 
 
