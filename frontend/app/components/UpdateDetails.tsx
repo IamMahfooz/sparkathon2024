@@ -26,20 +26,7 @@ const UpdateInvoice: React.FC<UpdateInvoiceProps> = ({ qrCode }) => {
 
     return (
         <div className="my-4 p-6 bg-white shadow-lg rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">Update Invoice</h2>
-            <input
-                type="text"
-                value={newBuyer}
-                onChange={(e) => setNewBuyer(e.target.value)}
-                placeholder="Enter new buyer ID"
-                className="border p-2 rounded-lg w-full mb-4"
-            />
-            <button
-                onClick={handleUpdateClick}
-                className="p-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
-            >
-                Update
-            </button>
+            <h2 className="text-2xl font-semibold mb-4">Product Reassigned successfully !</h2>
         </div>
     );
 };
