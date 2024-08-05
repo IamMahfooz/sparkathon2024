@@ -26,7 +26,7 @@ const UpdateInvoice: React.FC<UpdateInvoiceProps> = ({ qrCode }) => {
 
     return (
         <div className="my-4 p-6 bg-white shadow-lg rounded-lg">
-            <h2 className="text-2xl font-semibold mb-4">Product Reassigned successfully !</h2>
+            <h2 className="text-2xl font-semibold mb-4">Next Destination : Jamshedpur (JH0090) !</h2>
         </div>
     );
 };
