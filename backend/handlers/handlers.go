@@ -7,6 +7,8 @@ import (
     "github.com/IamMahfooz/walmart-dynamic-invoice-backend/utils"
     "go.mongodb.org/mongo-driver/bson"
     // "go.mongodb.org/mongo-driver/bson/primitive"
+    // "context"
+    "fmt"
 )
 
 func GetProductDetails(w http.ResponseWriter, r *http.Request) {
@@ -24,10 +26,14 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         // Define a default product
         defaultProduct := models.Product{
-            QrCode:      "default-qr-code",
-            Name:        "Mahfooz Alam",
-            Description: "Gaming Console",
-            Price:       999,
+            BuyerName: "Mahfooz Alam",
+            Description: "Zebronics max fury gaming console",
+            BuyerAddress: "Dhanbad , Jharkhand - 831005",
+            DateOfDelivery: "15th Aug 2024",
+            PaymentMode: "Cash on Delivery",
+            Price: 999,
+            Status: "Active",
+            CurrentLocation: "Dhanbad",
         }
 
         // Return the default product
@@ -42,8 +48,6 @@ func GetProductDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateProductDetails(w http.ResponseWriter, r *http.Request) {
-    // check for product status
-    // checkPructStatus(w,r)
     var product models.Product
     err := json.NewDecoder(r.Body).Decode(&product)
     if err != nil {
@@ -55,9 +59,14 @@ func UpdateProductDetails(w http.ResponseWriter, r *http.Request) {
     filter := bson.M{"qrCode": product.QrCode}
     update := bson.M{
         "$set": bson.M{
-            "name":        product.Name,
-            "description": product.Description,
-            "price":       product.Price,
+            "name":          product.BuyerName,
+            "description":   product.Description,
+            "buyerAddress":  product.BuyerAddress,
+            "dateOfDelivery": product.DateOfDelivery,
+            "paymentMode":   product.PaymentMode,
+            "price":         product.Price,
+            "status":        product.Status,
+            "currentLocation": product.CurrentLocation,
         },
     }
 
@@ -68,21 +77,55 @@ func UpdateProductDetails(w http.ResponseWriter, r *http.Request) {
     }
 
     json.NewEncoder(w).Encode(map[string]string{"message": "Product updated successfully"})
+    // After updating, check the product status
+    checkProductStatus(w, r)
 }
+
 func checkProductStatus(w http.ResponseWriter, r *http.Request) {
-    // utilise the already implemented order tracking system of walmart
-    // if product status is in no current order category ==> ship to nearest warehouse
-    // else call assignNextDestination(w,r)
+    var product models.Product
+    err := json.NewDecoder(r.Body).Decode(&product)
+    if err != nil {
+        http.Error(w, "Invalid input", http.StatusBadRequest)
+        return
+    }
+
+    collection := utils.DB.Collection("products")
+    filter := bson.M{"qrCode": product.QrCode}
+
+    err = collection.FindOne(r.Context(), filter).Decode(&product)
+    if err != nil {
+        http.Error(w, "Product not found", http.StatusNotFound)
+        return
+    }
+
+    if product.Status == "no current order" {
+        shipToNearestWarehouse(product, w, r)
+    } else {
+        assignNextDestination(w, r)
+    }
 }
-func assingNextDestination(w http.ResponseWriter,r * http.Request){
-    // utilise existing order tracking system to assing new destination
-    // ||--- if a same order place => if (distance of (new order - seller location) > distance of (new order - current location)){
-    //                                                ship directly to new location
-    //                                                }else{ ship to nearest warehouse }
-    //
-    // ||--- if not => return to nearest warehouse
+
+func shipToNearestWarehouse(product models.Product, w http.ResponseWriter, r *http.Request) {
+    // Logic to ship the product to the nearest warehouse
+    fmt.Fprintf(w, "Product %s is being shipped to the nearest warehouse", product.QrCode)
 }
 
+func assignNextDestination(w http.ResponseWriter, r *http.Request) {
+    var product models.Product
+    err := json.NewDecoder(r.Body).Decode(&product)
+    if err != nil {
+        http.Error(w, "Invalid input", http.StatusBadRequest)
+        return
+    }
 
+    // Logic to utilize existing order tracking system to assign new destination
+    // (Pseudo code, you need to implement actual logic)
+    newOrderDistance := 10 // Replace with actual distance calculation
+    sellerDistance := 20 // Replace with actual distance calculation
 
-
+    if newOrderDistance < sellerDistance {
+        fmt.Fprintf(w, "Product %s is being shipped directly to new order location", product.QrCode)
+    } else {
+        fmt.Fprintf(w, "Product %s is being shipped to the nearest warehouse", product.QrCode)
+    }
+}
